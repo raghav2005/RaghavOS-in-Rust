@@ -1,9 +1,14 @@
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [package]
+# Rust-based Highly Versatile System with Yoda (name of OS, abbrv: RHVSY)
+# or, as Rhea said, Raghavussy
 name = "raghav_os"
 version = "0.1.0"
 authors = ["Raghav Awasthi <raghavawasthi2005@gmail.com>"]
+
+[dependencies]
+bootloader = "0.10.3"
 
 # profile used for `cargo build`
 [profile.dev]
