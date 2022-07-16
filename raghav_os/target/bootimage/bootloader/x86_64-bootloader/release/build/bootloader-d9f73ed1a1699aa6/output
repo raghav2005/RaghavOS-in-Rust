@@ -1,0 +1,7 @@
+cargo:rerun-if-changed=/Users/raghav/OneDrive/Coding/OSDevelopment/RaghavOS-in-Rust/raghav_os/Cargo.toml
+cargo:rustc-link-search=native=/Users/raghav/OneDrive/Coding/OSDevelopment/RaghavOS-in-Rust/raghav_os/target/bootimage/bootloader/x86_64-bootloader/release/build/bootloader-d9f73ed1a1699aa6/out
+cargo:rustc-link-lib=static=kernel_bin-raghav_os
+cargo:rerun-if-env-changed=KERNEL
+cargo:rerun-if-env-changed=KERNEL_MANIFEST
+cargo:rerun-if-changed=/Users/raghav/OneDrive/Coding/OSDevelopment/RaghavOS-in-Rust/raghav_os/target/x86_64-raghav_os/debug/raghav_os
+cargo:rerun-if-changed=build.rs

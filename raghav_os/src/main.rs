@@ -11,7 +11,7 @@ fn panic(_info: &PanicInfo) -> ! {
 	loop {}
 }
 
-static HELLO: &[u8] = b"Hello World!";
+static HELLO: &[u8] = b"Hello World! Welcome to the RHVSY OS!";
 
 // don't mangle name of function
 #[no_mangle]
