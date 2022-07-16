@@ -1,14 +1,16 @@
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
 [package]
 name = "raghav_os"
 version = "0.1.0"
-edition = "2018"
+authors = ["Raghav Awasthi <raghavawasthi2005@gmail.com>"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-
+# profile used for `cargo build`
 [profile.dev]
+# disable stack unwinding on panic
 panic = "abort"
 
+# profile used for `cargo build --release`
 [profile.release]
+# disable stack unwinding on panic
 panic = "abort"
