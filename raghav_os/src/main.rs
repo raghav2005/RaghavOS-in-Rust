@@ -11,6 +11,8 @@ fn panic(_info: &PanicInfo) -> ! {
 	loop {}
 }
 
+mod vga_buffer;
+
 static HELLO: &[u8] = b"Hello World! Welcome to the RHVSY OS!";
 
 // don't mangle name of function
