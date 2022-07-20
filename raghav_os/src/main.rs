@@ -12,7 +12,8 @@ mod vga_buffer;
 
 // function called on panic
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+	println!("{}", info);
 	loop {}
 }
 
@@ -24,6 +25,8 @@ pub extern "C" fn _start() -> ! {
 	// this function is the entry point, since linker looks for a function named `_start` by default
 
 	println!("Hello World{}", "!");
+	panic!("Some panic message");
 
 	loop {}
+
 }
