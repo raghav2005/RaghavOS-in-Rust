@@ -2,10 +2,12 @@ extern crate volatile;
 extern crate lazy_static;
 extern crate spin;
 
+
 use vga_buffer::volatile::Volatile;
 use core::fmt;
 use vga_buffer::lazy_static::lazy_static;
 use vga_buffer::spin::Mutex;
+
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
@@ -23,11 +25,13 @@ struct Buffer {
 	chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
+
 pub struct Writer {
 	column_position: usize,
 	color_code: ColorCode,
 	buffer: &'static mut Buffer,
 }
+
 
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -63,6 +67,7 @@ lazy_static! {
 		},
 	});
 }
+
 
 // represent a full colour code that specifies foreground + background colours
 impl ColorCode {
@@ -143,4 +148,23 @@ impl fmt::Write for Writer {
 		self.write_string(s);
 		Ok(())
 	}
+}
+
+
+#[macro_export]
+macro_rules! print {
+	($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
+}
+
+#[macro_export]
+macro_rules! println {
+	() => ($crate::print!("\n"));
+	($($arg:tt)*) => ($crate::print!("{}\n", format_args!($($arg)*)));
+}
+
+
+#[doc(hidden)]
+pub fn _print(args: fmt::Arguments) {
+	use core::fmt::Write;
+	WRITER.lock().write_fmt(args).unwrap();
 }
