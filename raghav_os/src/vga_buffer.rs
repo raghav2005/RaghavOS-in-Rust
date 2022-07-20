@@ -1,6 +1,30 @@
-#[allow(dead_code)]
+extern crate volatile;
 
-// all colours
+use vga_buffer::volatile::Volatile;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(transparent)]
+struct ColorCode(u8);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(C)]
+struct ScreenChar {
+	ascii_character: u8,
+	color_code: ColorCode,
+}
+
+#[repr(transparent)]
+struct Buffer {
+	chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
+}
+
+pub struct Writer {
+	column_position: usize,
+	color_code: ColorCode,
+	buffer: &'static mut Buffer,
+}
+
+#[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
 pub enum Color {
@@ -22,36 +46,14 @@ pub enum Color {
 	White = 15,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(transparent)]
-struct ColorCode(u8);
+const BUFFER_HEIGHT: usize = 25;
+const BUFFER_WIDTH: usize = 80;
 
 // represent a full colour code that specifies foreground + background colours
 impl ColorCode {
 	fn new(foreground: Color, background: Color) -> ColorCode {
 		ColorCode((background as u8) << 4 | (foreground as u8))
 	}
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(C)]
-struct ScreenChar {
-	ascii_character: u8,
-	color_code: ColorCode,
-}
-
-const BUFFER_HEIGHT: usize = 25;
-const BUFFER_WIDTH: usize = 80;
-
-#[repr(transparent)]
-struct Buffer {
-	chars: [[ScreenChar; BUFFER_WIDTH]; BUFFER_HEIGHT],
-}
-
-pub struct Writer {
-	column_position: usize,
-	color_code: ColorCode,
-	buffer: &'static mut Buffer,
 }
 
 impl Writer {
@@ -71,10 +73,10 @@ impl Writer {
 				let col = self.column_position;
 				let color_code = self.color_code;
 
-				self.buffer.chars[row][col] = ScreenChar {
+				self.buffer.chars[row][col].write(ScreenChar {
 					ascii_character: byte,
 					color_code,
-				};
+				});
 
 				self.column_position += 1;
 			}

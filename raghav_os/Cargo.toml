@@ -9,6 +9,7 @@ authors = ["Raghav Awasthi <raghavawasthi2005@gmail.com>"]
 
 [dependencies]
 bootloader = "0.9.8"
+volatile = "0.2.6"
 
 # profile used for `cargo build`
 [profile.dev]
