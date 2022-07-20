@@ -1,7 +1,11 @@
 extern crate volatile;
+extern crate lazy_static;
+extern crate spin;
 
 use vga_buffer::volatile::Volatile;
 use core::fmt;
+use vga_buffer::lazy_static::lazy_static;
+use vga_buffer::spin::Mutex;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
@@ -49,6 +53,16 @@ pub enum Color {
 
 const BUFFER_HEIGHT: usize = 25;
 const BUFFER_WIDTH: usize = 80;
+
+lazy_static! {
+	pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
+		column_position: 0,
+		color_code: ColorCode::new(Color::Yellow, Color::Black),
+		buffer: unsafe {
+			&mut *(0xb8000 as *mut Buffer)
+		},
+	});
+}
 
 // represent a full colour code that specifies foreground + background colours
 impl ColorCode {
@@ -129,22 +143,4 @@ impl fmt::Write for Writer {
 		self.write_string(s);
 		Ok(())
 	}
-}
-
-pub fn print_something() {
-
-	use core::fmt::Write;
-	
-	let mut writer = Writer {
-		column_position: 0,
-		color_code: ColorCode::new(Color::Yellow, Color::Black),
-		buffer: unsafe {
-			&mut *(0xb8000 as *mut Buffer)
-		},
-	};
-
-	writer.write_byte(b'H');
-	writer.write_string("ello! ");
-	write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap();
-
 }
