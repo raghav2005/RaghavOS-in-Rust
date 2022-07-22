@@ -6,8 +6,20 @@
 #![reexport_test_harness_main = "test_main"]
 
 
+// all crates to use
+extern crate raghav_os;
+
+
 // all methods to use
 use core::panic::PanicInfo;
+use raghav_os::println;
+
+
+// all tests
+#[test_case]
+fn test_println() {
+	println!("test_println output");
+}
 
 
 // all functions
