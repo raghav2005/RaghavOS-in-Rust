@@ -1,3 +1,4 @@
+// all headers
 // don't link Rust standard library
 #![no_std]
 // disable all Rust-level entry points
@@ -52,7 +53,7 @@ where
 }
 
 
-// testing stuff
+// all testing stuff
 #[cfg(test)]
 fn test_runner(tests: &[&dyn Testable]) {
 	serial_println!("Running {} tests", tests.len());
@@ -60,11 +61,6 @@ fn test_runner(tests: &[&dyn Testable]) {
 		test.run();
 	}
 	exit_qemu(QemuExitCode::Success);
-}
-
-#[test_case]
-fn trivial_assertion() {
-	assert_eq!(1, 1);
 }
 
 // panic handler in test mode
@@ -80,6 +76,11 @@ fn panic(info: &PanicInfo) -> ! {
 
 }
 
+#[test_case]
+fn trivial_assertion() {
+	assert_eq!(1, 1);
+}
+
 
 // all functions
 // function called on panic
@@ -90,8 +91,6 @@ fn panic(info: &PanicInfo) -> ! {
 	loop {}
 }
 
-
-// all public functions
 // don't mangle name of function
 #[no_mangle]
 pub extern "C" fn _start() -> ! {

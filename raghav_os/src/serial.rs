@@ -1,13 +1,15 @@
+// all crates to use
 extern crate uart_16550;
 extern crate spin;
 extern crate lazy_static;
 
 
+// all methods to use
 use serial::uart_16550::SerialPort;
 use serial::spin::Mutex;
 use serial::lazy_static::lazy_static;
 
-
+// all constants / enums / statics
 lazy_static! {
 	pub static ref SERIAL1: Mutex<SerialPort> = {
 		let mut serial_port = unsafe {
@@ -19,6 +21,7 @@ lazy_static! {
 }
 
 
+// all macro exports
 // prints to host through serial interface
 #[macro_export]
 macro_rules! serial_print {
@@ -36,6 +39,7 @@ macro_rules! serial_println {
 }
 
 
+// all stuff to hide from documentation
 #[doc(hidden)]
 pub fn _print(args: ::core::fmt::Arguments) {
 	use core::fmt::Write;

@@ -1,14 +1,17 @@
+// all crates to use
 extern crate volatile;
 extern crate lazy_static;
 extern crate spin;
 
 
+// all methods to use
 use vga_buffer::volatile::Volatile;
 use core::fmt;
 use vga_buffer::lazy_static::lazy_static;
 use vga_buffer::spin::Mutex;
 
 
+// all struct / trait outlines
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
 struct ColorCode(u8);
@@ -25,7 +28,6 @@ struct Buffer {
 	chars: [[Volatile<ScreenChar>; BUFFER_WIDTH]; BUFFER_HEIGHT],
 }
 
-
 pub struct Writer {
 	column_position: usize,
 	color_code: ColorCode,
@@ -33,6 +35,7 @@ pub struct Writer {
 }
 
 
+// all constants / enums / statics
 #[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
@@ -69,6 +72,7 @@ lazy_static! {
 }
 
 
+// all implementations
 // represent a full colour code that specifies foreground + background colours
 impl ColorCode {
 	fn new(foreground: Color, background: Color) -> ColorCode {
@@ -151,6 +155,7 @@ impl fmt::Write for Writer {
 }
 
 
+// all macro exports
 #[macro_export]
 macro_rules! print {
 	($($arg:tt)*) => ($crate::vga_buffer::_print(format_args!($($arg)*)));
@@ -163,8 +168,36 @@ macro_rules! println {
 }
 
 
+// all stuff to hide from documentation
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
 	use core::fmt::Write;
 	WRITER.lock().write_fmt(args).unwrap();
+}
+
+
+// all testing stuff
+#[test_case]
+fn test_println_simple() {
+	println!("test_println_simple output");
+}
+
+#[test_case]
+fn test_println_many() {
+	for _ in 0..200 {
+		println!("test_println_many output");
+	}
+}
+
+#[test_case]
+fn test_println_output() {
+	
+	let s = "This is a test string that fits on a single line";
+	println!("{}", s);
+
+	for (i, c) in s.chars().enumerate() {
+		let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT - 2][i].read();
+		assert_eq!(char::from(screen_char.ascii_character), c);
+	}
+
 }
